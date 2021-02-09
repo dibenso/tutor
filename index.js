@@ -130,4 +130,25 @@ function employee () {
                 choices: managerArr,
             },
         ])
-  
+  .then(function (answer) {
+            let roleID;
+            for (let r = 0; r < res.length, r++) {
+                if (res[r].title == answer.roleName) { roleID = res[r].role_id;}
+            }
+            let managerID;
+            for (let m = 0; m < res2.length; m++) {
+                if (res2[m].last_name == answer.managerName) {
+                    managerID = res2[m].employee_id;
+
+                }
+            }
+
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.first_name,
+                    last_name: answer.last_name,
+                    role_id: roleID,
+                    manager_id: managerID,
+                }
+
