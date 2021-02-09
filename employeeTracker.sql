@@ -5,27 +5,25 @@ CREATE DATABASE employeeTracker_DB;
 USE employeeTracker_DB;
 
 CREATE TABLE department (
-id INT(1) AUTO_INCREMENT NOT NULL,
-department_name VARCHAR(30) NULL,
-PRIMARY KEY (id)
+department_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+department_name VARCHAR(30) NOT NULL
 ); 
 
 
 CREATE TABLE roles (
-id INT(1) AUTO_INCREMENT NOT NULL,
+role_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 title VARCHAR(30) NULL,
-salary DECIMAL(10, 2) NULL,
+salary DECIMAL NULL,
 department_id INT(10) NULL, 
-PRIMARY KEY (id),
-FOREIGN KEY (department_id) REFERENCES department(id)
+FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
 CREATE TABLE employee ( 
-id INT(1) AUTO_INCREMENT NOT NULL,
-first_name VARCHAR(30) NULL, 
-last_name VARCHAR(30) NULL,
+employee_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+first_name VARCHAR(30) NOT NULL, 
+last_name VARCHAR(30) NOT NULL,
 role_id INT(10) NOT NULL,
-manager_id INT NOT NULL,
-PRIMARY KEY (id),
-FOREIGN KEY (role_id) REFERENCES roles(id)
+manager_id INT,
+FOREIGN KEY (role_id) REFERENCES roles(role_id),
+FOREIGN KEY(manager_id) REFERENCES employee(employee_id)
 ); 
