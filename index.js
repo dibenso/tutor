@@ -207,6 +207,30 @@ connection.query("SELECT * FROM department, function (err, res") {
     });
 }
 
+//add a new department 
+
+function department() {
+    inquirer
+        .prompt([
+            {
+                name: "department",
+                type: "input",
+                message: "department name:",
+            };
+        ])
+        .then(function (answer) {
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                   department_name: answer.department 
+                },
+                function (err) {
+                    if (err) throw err;
+                }
+        };
+        runApplication();
+    });
+}
 
 
 
