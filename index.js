@@ -151,4 +151,62 @@ function employee () {
                     role_id: roleID,
                     manager_id: managerID,
                 }
+              function (err) {
+                    if (err) throw err;
+                }
+            );
+            runApplication();
+        });
+    });
+});
+}
+
+//add a new role 
+
+function role () {
+connection.query("SELECT * FROM department, function (err, res") {
+    if (err) throw err;
+    inquirer   
+        .prompt([
+            {
+                name: "title",
+                type: "input",
+                message: "what is the role title?",
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "what is the salary for this role?",
+            }
+            {
+                name: "departmentName",
+                type: "list",
+                choices: deptArr,
+            },
+        ])
+        .then(function (answer) {
+            let deptID;
+            for (let d = 0; d < res.length; d++) {
+                if (res[d].department_name == answer.departmentName) {
+                deptID = red[d].department_id;
+                }
+            }
+        connection.query(
+            "INSERT INTO role SET ?",
+            {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: deptID,
+            };
+            function (err) {
+                if (err) throw err;
+            }
+        );
+        runApplication()
+        });
+    });
+}
+
+
+
 
