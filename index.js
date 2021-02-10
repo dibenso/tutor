@@ -1,6 +1,5 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const cTable = require("console.table");
 require("dotenv").config();
 let deptArr = [];
 let roleArr = [];
@@ -146,7 +145,6 @@ function employee () {
             for (let r = 0; r < res.length; r++) {
                 if (res[r].title == answer.roleName) { roleID = res[r].role_id;}
             }
-        }
             let managerID;
             for (let m = 0; m < res2.length; m++) {
                 if (res2[m].last_name == answer.managerName) {
@@ -247,10 +245,10 @@ function department() {
 
 function viewByDepartment() {
     connection.query(
-        "SELECT employee.employee_id, employee.first_name, employee.last_name department.department_name FROM employee 
-        LEFT JOIN role ON employee.role_id = role.role_id
+        'SELECT employee.employee_id, employee.first_name, employee.last_name department.department_name FROM employee 
+        LEFT JOIN role ON employee.role_id = roles.role_id
         LEFT JOIN department ON role.department_id = department.department_id 
-        ORDER BY department.department_name",
+        ORDER BY department.department_name',
             function (err, data) {
                 if (err) throw err;
                 console.table(data);
@@ -264,10 +262,10 @@ function viewByDepartment() {
 
 function viewByRole() {
     connection.query(
-        "SELECT employee.employee_id, employee.employee_id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name FROM employee
+        'SELECT employee.employee_id, employee.employee_id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name FROM employee
         LEFT JOIN role ON employee.role_id = role.role_id
         LEFT JOIN department ON role.department_id = department.department_id 
-        ORDER BY role.title",
+        ORDER BY role.title',
         function (err, data) {
             if (err, data) throw err;
             console.table(data);
@@ -354,6 +352,7 @@ function updateEmployee () {
         }
     );
 }
+
 
 
 
