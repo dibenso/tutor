@@ -37,9 +37,20 @@ var connection = mysql.createConnection({
     runApplication();
   });
 
+  function viewEmployees() {
+    connection.query(
+        'SELECT employee.employee_id, employee.first_name, employee.last_name, title, department.department_name AS department,salary,CONCAT(a.first_name, " ", a.last_name) AS manager FROM employee LEFT JOIN roles ON employee.role_id = roles.role_id LEFT JOIN department ON roles.department_id = department.department_id LEFT JOIN employee a ON a.employee_id = employee.manager_id',
+        function (err, data) {
+            if (err) throw err;
+            console.table(data);
+            runApplication();
+        }
+    );
+}
+
   function runApplication() {
     inquirer.prompt(mainMenu).then((response) => {
-        switch (response.firstChoice) {
+        switch (response.firstOptions) {
             case "add new employee":
                 employee();
                 break;
@@ -50,6 +61,7 @@ var connection = mysql.createConnection({
                 department();
                 break;
             case "view employees":
+                console.log("Here")
                 viewEmployees();
                 break;
             case "view employees by role":
@@ -245,10 +257,7 @@ function department() {
 
 function viewByDepartment() {
     connection.query(
-        'SELECT employee.employee_id, employee.first_name, employee.last_name department.department_name FROM employee 
-        LEFT JOIN role ON employee.role_id = roles.role_id
-        LEFT JOIN department ON role.department_id = department.department_id 
-        ORDER BY department.department_name',
+        'SELECT employee.employee_id, employee.first_name, employee.last_name department.department_name FROM employee LEFT JOIN role ON employee.role_id = roles.role_id LEFT JOIN department ON role.department_id = department.department_id ORDER BY department.department_name',
             function (err, data) {
                 if (err) throw err;
                 console.table(data);
@@ -262,10 +271,7 @@ function viewByDepartment() {
 
 function viewByRole() {
     connection.query(
-        'SELECT employee.employee_id, employee.employee_id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name FROM employee
-        LEFT JOIN role ON employee.role_id = role.role_id
-        LEFT JOIN department ON role.department_id = department.department_id 
-        ORDER BY role.title',
+        'SELECT employee.employee_id, employee.employee_id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name FROM employee LEFT JOIN role ON employee.role_id = role.role_id LEFT JOIN department ON role.department_id = department.department_id ORDER BY role.title',
         function (err, data) {
             if (err, data) throw err;
             console.table(data);
@@ -290,22 +296,6 @@ function viewDepartments() {
         console.table(data);
         runApplication();
     });
-}
-
-function viewEmployees() {
-    connection.query(
-        'SELECT employee.employee_id, employee.first_name, employee.last_name, role.title,
-        department.department_name AS department,role.salary,CONCAT(a.first_name, " ", a.last_name) AS manager
-        FROM employee
-        LEFT JOIN role ON employee.role_id = role.role_id
-        LEFT JOIN department ON role.department_id = department.department_id
-        LEFT JOIN employee a ON a.employee_id = employee.manager_id',
-        function (err, data) {
-            if (err) throw err;
-            console.table(data);
-            runApplication();
-        }
-    );
 }
 
 function updateEmployee () {
@@ -340,7 +330,7 @@ function updateEmployee () {
                         }
                     }
                     connection.query(
-                        "UPDATE employee SET role_id = ?WHERE employee_id = (SELECT employee_id FROM(SELECT employee_id FROM employee WHERE CONCAT(first_name," ",last_name) = ?)AS NAME)",
+                        "UPDATE employee SET role_id = ? WHERE employee_id = (SELECT employee_id FROM(SELECT employee_id FROM employee WHERE CONCAT(first_name,' ',last_name) = ?)AS NAME)",
                         [roleID, answer.employeeChoice],
                         function (err) {
                             if (err) throw err;
@@ -349,12 +339,6 @@ function updateEmployee () {
                 runApplication();
                 });
             });
-        }
-    );
+        });
+    }
 }
-
-
-
-
-
-
