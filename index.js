@@ -108,6 +108,29 @@ function role () {
         });
     }
 
+    function department() {
+        inquirer
+            .prompt([
+                {
+                    name: "department",
+                    type: "input",
+                    message: "department name:",
+                },
+            ])
+            .then(function (answer) {
+                connection.query(
+                    "INSERT INTO department SET ?",
+                    {
+                       department_name: answer.department 
+                    },
+                    function (err) {
+                        if (err) throw err;
+                    }
+                );
+            runApplication();
+        });
+    }
+
   function runApplication() {
     inquirer.prompt(mainMenu).then((response) => {
         switch (response.firstOptions) {
@@ -240,31 +263,6 @@ function employee () {
         });
     });
 });
-
-//add a new department 
-
-function department() {
-    inquirer
-        .prompt([
-            {
-                name: "department",
-                type: "input",
-                message: "department name:",
-            },
-        ])
-        .then(function (answer) {
-            connection.query(
-                "INSERT INTO department SET ?",
-                {
-                   department_name: answer.department 
-                },
-                function (err) {
-                    if (err) throw err;
-                }
-            );
-        runApplication();
-    });
-}
 
 //employees by department 
 
