@@ -131,6 +131,53 @@ function role () {
         });
     }
 
+    function updateEmployee () {
+        connection.query( 
+            `SELECT concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee`,
+            function (err, employees) {
+                if (err) throw err;
+                emplArr = [];
+                for (i = 0; i <employees.length; i++) {
+                    emplArr.push(employees[i].Name);
+                }
+                connection.query("SELECT * FROM roles", function (err, res2) {
+                    if (err) throw err;
+                    inquirer
+                        .prompt([
+                            {
+                                name: "employeeChoice",
+                                type: "list",
+                                message: "which employee to update?",
+                                choices: emplArr,
+                            },
+                            {
+                                name: "roleChoice",
+                                type: "list",
+                                message: "what is employees updated role?",
+                                choices: roleArr,
+                            },
+                        ])
+                        .then(function(answer) {
+                            let roleID;
+                            for(let r = 0; r < res2.length; r++) {
+                                if (res2[r].title == answer.roleChoice) {
+                                    roleID = res2[r].role_id;
+                                }
+                            }
+
+                            connection.query(
+                                "UPDATE employee SET role_id = ? WHERE employee_id = (SELECT employee_id FROM(SELECT employee_id FROM employee WHERE CONCAT(first_name,' ',last_name) = ?)AS NAME)",
+                                [roleID, answer.employeeChoice],
+                                function (err) {
+                                    if (err) throw err;
+                                }
+                            );
+                            runApplication();
+                        });
+                });
+            })
+        }
+
   function runApplication() {
     inquirer.prompt(mainMenu).then((response) => {
         switch (response.firstOptions) {
@@ -158,7 +205,7 @@ function role () {
             case "view all departments":
                 viewDepartments();
                 break;
-            case "update employee role":
+            case "update employee roles":
                 updateEmployee();
                 break;
         }
@@ -263,6 +310,7 @@ function employee () {
         });
     });
 });
+}
 
 //employees by department 
 
@@ -289,49 +337,4 @@ function viewByRole() {
             runApplication();
         }
     );
-}
-
-function updateEmployee () {
-    connection.query( 
-        `SELECT concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee`,
-        function (err, employees) {
-            if (err) throw err;
-            emplArr = [];
-            for (i = 0; i <employees.length; i++) {
-                emplArr.push(employees[i].Name);
-            }
-            connection.query("SELECT * FROM roles", function (err, res2) {
-                if (err) throw err;
-                inquirer
-                    .prompt([
-                        {
-                            name: "employeeChoice",
-                            type: "list",
-                            message: "which employee to update?",
-                            choices: emplArr,
-                        },
-                        {
-                            name: "roleChoice",
-                            type: "list",
-                            message: "what is employees updated role?",
-                            choices: roleArr,
-                        },
-                    ])
-                    .then(function(answer) {
-                        let roleID;
-                        for(let r = 0; r < res2.length; r++) { if (res2[r].title == answer.roleChoice) { roleID = res2[r].role_id;
-                        }
-                    }
-                    connection.query(
-                        "UPDATE employee SET role_id = ? WHERE employee_id = (SELECT employee_id FROM(SELECT employee_id FROM employee WHERE CONCAT(first_name,' ',last_name) = ?)AS NAME)",
-                        [roleID, answer.employeeChoice],
-                        function (err) {
-                            if (err) throw err;
-                        }
-                    );
-                runApplication();
-                });
-            });
-        });
-    }
 }
