@@ -24,7 +24,7 @@ var connection = mysql.createConnection({
             "add new role",
             "add new department",
             "view employees",
-            "view departments",
+            "view all departments",
             "view all roles",
             "update employee roles",
         ],
@@ -50,6 +50,14 @@ var connection = mysql.createConnection({
 
 function viewRoles() {
     connection.query("SELECT * FROM roles", function(err,data) {
+        if (err) throw err;
+        console.table(data);
+        runApplication();
+    });
+}
+
+function viewDepartments() {
+    connection.query("SELECT * FROM department", function (err, data) {
         if (err) throw err;
         console.table(data);
         runApplication();
@@ -283,14 +291,6 @@ function viewByRole() {
             runApplication();
         }
     );
-}
-
-function viewDepartments() {
-    connection.query("SELECT * FROM department", function (err, data) {
-        if (err) throw err;
-        console.table(data);
-        runApplication();
-    });
 }
 
 function updateEmployee () {
