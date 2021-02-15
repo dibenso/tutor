@@ -25,7 +25,7 @@ var connection = mysql.createConnection({
             "add new department",
             "view employees",
             "view departments",
-            "view roles",
+            "view all roles",
             "update employee roles",
         ],
     },
@@ -48,6 +48,58 @@ var connection = mysql.createConnection({
     );
 }
 
+function viewRoles() {
+    connection.query("SELECT * FROM roles", function(err,data) {
+        if (err) throw err;
+        console.table(data);
+        runApplication();
+    });
+}
+
+function role () {
+    connection.query("SELECT * FROM department", function (err, res) {
+        if (err) throw err;
+        inquirer   
+            .prompt([
+                {
+                    name: "title",
+                    type: "input",
+                    message: "what is the role title?",
+                },
+                {
+                    name: "salary",
+                    type: "input",
+                    message: "what is the salary for this role?",
+                },
+                {
+                    name: "departmentName",
+                    type: "list",
+                    choices: deptArr,
+                },
+            ])
+            .then(function (answer) {
+                let deptID;
+                for (let d = 0; d < res.length; d++) {
+                    if (res[d].department_name == answer.departmentName) {
+                    deptID = res[d].department_id;
+                    }
+                }
+            connection.query(
+                "INSERT INTO roles SET ?",
+                {
+                    title: answer.title,
+                    salary: answer.salary,
+                    department_id: deptID,
+                },
+                function (err) {
+                    if (err) throw err;
+                }
+            );
+            runApplication()
+            });
+        });
+    }
+
   function runApplication() {
     inquirer.prompt(mainMenu).then((response) => {
         switch (response.firstOptions) {
@@ -61,7 +113,6 @@ var connection = mysql.createConnection({
                 department();
                 break;
             case "view employees":
-                console.log("Here")
                 viewEmployees();
                 break;
             case "view employees by role":
@@ -182,52 +233,6 @@ function employee () {
     });
 });
 
-//add a new role 
-
-function role () {
-connection.query("SELECT * FROM department", function (err, res) {
-    if (err) throw err;
-    inquirer   
-        .prompt([
-            {
-                name: "title",
-                type: "input",
-                message: "what is the role title?",
-            },
-            {
-                name: "salary",
-                type: "input",
-                message: "what is the salary for this role?",
-            },
-            {
-                name: "departmentName",
-                type: "list",
-                choices: deptArr,
-            },
-        ])
-        .then(function (answer) {
-            let deptID;
-            for (let d = 0; d < res.length; d++) {
-                if (res[d].department_name == answer.departmentName) {
-                deptID = res[d].department_id;
-                }
-            }
-        connection.query(
-            "INSERT INTO roles SET ?",
-            {
-                title: answer.title,
-                salary: answer.salary,
-                department_id: deptID,
-            },
-            function (err) {
-                if (err) throw err;
-            }
-        );
-        runApplication()
-        });
-    });
-}
-
 //add a new department 
 
 function department() {
@@ -278,16 +283,6 @@ function viewByRole() {
             runApplication();
         }
     );
-}
-
-//all roles 
-
-function viewRoles() {
-    connection.query("SELECT * FROM roles", function(err,data) {
-        if (err) throw err;
-        console.table(data);
-        runApplication();
-    });
 }
 
 function viewDepartments() {
