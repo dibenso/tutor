@@ -23,7 +23,7 @@ var connection = mysql.createConnection({
             "add new employee",
             "add new role",
             "add new department",
-            "view employees",
+            "view all employees",
             "view all departments",
             "view all roles",
             "update employee roles",
@@ -190,7 +190,7 @@ function role () {
             case "add new department":
                 department();
                 break;
-            case "view employees":
+            case "view all employees":
                 viewEmployees();
                 break;
             case "view employees by role":
