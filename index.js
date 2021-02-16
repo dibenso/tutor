@@ -26,6 +26,7 @@ var connection = mysql.createConnection({
             "view all employees",
             "view employees by manager",
             "view all departments",
+            "view department budget",
             "view all roles",
             "update employee roles",
             "update employee managers",
@@ -213,6 +214,9 @@ function role () {
             case "view all departments":
                 viewDepartments();
                 break;
+            case "view department budget":
+                viewDepartmentBudget();
+                break;
             case "update employee roles":
                 updateEmployee();
                 break;
@@ -236,8 +240,41 @@ function role () {
     getManagers();
 }
 
+function viewDepartmentBudget() {
+    connection.query("SELECT * FROM department", function(err, departments) {
+        if(err) throw err;
+        let deptArr = [];
+        for(let i = 0; i < departments.length; i++) {
+            deptArr.push(departments[i].department_name)
+        }
+
+        inquirer.prompt([
+            {
+                name: "departmentChoice",
+                type: "list",
+                message: "which department would you like to delete?",
+                choices: deptArr
+            }
+        ]).then(function(answer) {
+            let department;
+                for(let i = 0; i < departments.length; i++) {
+                    if(departments[i].department_name == answer.departmentChoice) {
+                        department = departments[i]
+                    }
+                }
+
+                connection.query("SELECT SUM(roles.salary) AS salary FROM roles WHERE roles.department_id = ?", [department.department_id], function(err, combined) {
+                    if(err) throw err;
+                    console.log(`budget for ${department.department_name} department is ${combined[0].salary}`);
+                    runApplication();
+                })
+        })
+    })
+}
+
 function deleteDepartment() {
     connection.query("SELECT * FROM department", function(err, departments) {
+        if(err) throw err;
         let deptArr = [];
         for(let i = 0; i < departments.length; i++) {
             deptArr.push(departments[i].department_name)
@@ -269,6 +306,7 @@ function deleteDepartment() {
 
 function deleteRole() {
     connection.query("SELECT * FROM roles", function(err, roles) {
+        if(err) throw err;
         let roleArr = [];
         for(let i = 0; i < roles.length; i++) {
             roleArr.push(roles[i].title)
@@ -300,6 +338,7 @@ function deleteRole() {
 
 function deleteEmployee() {
     connection.query("SELECT employee_id, concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee", function(err, employees) {
+        if(err) throw err;
         let emplArr = [];
         for(let i = 0; i < employees.length; i++) {
             emplArr.push(employees[i].Name)
