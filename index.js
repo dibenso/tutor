@@ -27,6 +27,7 @@ var connection = mysql.createConnection({
             "view all departments",
             "view all roles",
             "update employee roles",
+            "update employee managers"
         ],
     },
   ];
@@ -208,13 +209,66 @@ function role () {
             case "update employee roles":
                 updateEmployee();
                 break;
+            case "update employee managers":
+                updateEmployeeManager();
+                break;
         }
-});
+    });
 
-getDepts();
-getRoles();
-getManagers();
-  }
+    getDepts();
+    getRoles();
+    getManagers();
+}
+
+function updateEmployeeManager() {
+    connection.query( 
+        `SELECT employee_id, concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee`,
+        function(err, employees) {
+            emplArr = [];
+            for (i = 0; i <employees.length; i++) {
+                emplArr.push(employees[i].Name);
+            }
+            inquirer.prompt([
+                {
+                    name: "employeeChoice",
+                    type: "list",
+                    message: "which employee to update?",
+                    choices: emplArr,
+                },
+                {
+                    name: "managerChoice",
+                    type: "list",
+                    message: "who is employees manager?",
+                    choices: emplArr,
+                }
+            ]).then(function(answer) {
+                let employee;
+                let manager;
+                for(let i = 0; i < employees.length; i++) {
+                    if (employees[i].Name == answer.employeeChoice) {
+                        employee = employees[i];
+                    }
+                    if(employees[i].Name == answer.managerChoice) {
+                        manager = employees[i];
+                    }
+                }
+
+                console.log(employee)
+                console.log(manager)
+
+                connection.query(
+                    "UPDATE employee SET manager_id = ? WHERE employee_id = ?",
+                    [manager.employee_id, employee.employee_id],
+                    function (err) {
+                        if (err) throw err;
+                    }
+                );
+                
+                runApplication()
+            })
+        }
+    );
+}
 
 function getDepts() {
     connection.query("SELECT department_name FROM department", function (
