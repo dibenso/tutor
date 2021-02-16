@@ -247,7 +247,7 @@ function deleteDepartment() {
             {
                 name: "departmentChoice",
                 type: "list",
-                message: "which department would you like to delete",
+                message: "which department would you like to delete?",
                 choices: deptArr
             }
         ]).then(function(answer) {
@@ -268,11 +268,65 @@ function deleteDepartment() {
 }
 
 function deleteRole() {
+    connection.query("SELECT * FROM roles", function(err, roles) {
+        let roleArr = [];
+        for(let i = 0; i < roles.length; i++) {
+            roleArr.push(roles[i].title)
+        }
 
+        inquirer.prompt([
+            {
+                name: "roleChoice",
+                type: "list",
+                message: "which role would you like to delete?",
+                choices: roleArr
+            }
+        ]).then(function(answer) {
+            let role;
+                for(let i = 0; i < roles.length; i++) {
+                    if(roles[i].title == answer.roleChoice) {
+                        role = roles[i]
+                    }
+                }
+
+                connection.query("DELETE FROM roles WHERE role_id = ?", [role.role_id], function(err) {
+                    if(err) throw err;
+                    console.log("role (and employees that depend on it) deleted");
+                    runApplication();
+                })
+        })
+    })
 }
 
 function deleteEmployee() {
+    connection.query("SELECT employee_id, concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee", function(err, employees) {
+        let emplArr = [];
+        for(let i = 0; i < employees.length; i++) {
+            emplArr.push(employees[i].Name)
+        }
 
+        inquirer.prompt([
+            {
+                name: "employeeChoice",
+                type: "list",
+                message: "which employee would you like to delete?",
+                choices: emplArr
+            }
+        ]).then(function(answer) {
+            let employee;
+                for(let i = 0; i < employees.length; i++) {
+                    if(employees[i].Name == answer.employeeChoice) {
+                        employee = employees[i]
+                    }
+                }
+
+                connection.query("DELETE FROM employee WHERE employee_id = ?", [employee.employee_id], function(err) {
+                    if(err) throw err;
+                    console.log("employee deleted");
+                    runApplication();
+                })
+        })
+    })
 }
 
 function viewEmployeesByManager() {
