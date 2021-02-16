@@ -22,4 +22,12 @@ router.post("/api/burgers", (req, res) => {
   );
 });
 
+router.put("/api/burgers/:id", (req, res) => {
+  burger.updateOne(
+    { devoured: req.body.devoured },
+    `id = ${req.params.id}`,
+    result => res.json({ id: req.params.id, devoured: true })
+  );
+});
+
 module.exports = router;

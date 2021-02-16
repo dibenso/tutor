@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     const createForm = document.getElementById("create-form");
-
     createForm.addEventListener('submit', event => {
         event.preventDefault();
+        
         const burgerName = document.getElementById('ca');
         const newBurger = { burger_name: burgerName.value, devoured: false };
 
@@ -17,42 +17,38 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(newBurger)
-        }).then(res => {
-            burgerName.value = '';
+        }).then(response => {
+            if(response.ok) {
+                burgerName.value = '';
 
-            console.log("new burger was made");
-            window.location.reload();
+                console.log("new burger was made");
+                window.location.reload();
+            }
         });
     })
 
-    const changeDevourBtn = document.querySelectorAll(".change-devoured"); 
-    if (changeDevourBtn) {
-        changeDevourBtn.forEach((button) => {
-            button.addEventListener("click", (e) => {
-                const id = e.target.getAttribute("data-id");
-                var devourState = e.target.getAttribute("data-devoured");
-    const newDevouredState = true;
-    console.log(newDevouredState)
+    const changeDevourBtn = document.querySelectorAll(".change-devoured");
+    changeDevourBtn.forEach((button) => {
+        button.addEventListener("click", (e) => {
+            const id = e.target.getAttribute("data-id");
+            const devourState = !!parseInt(e.target.getAttribute("data-devoured"));
+            const newDevouredState = !devourState;
 
-    fetch(`/api/burgers/${id}`, {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-
-        body: JSON.stringify({devoured: newDevouredState}),
-    }).then((response) => {
-
-            if (response.ok) {
-                console.log(`changed devoured/eaten to: ${newDevouredState}`);
-                location.reload('/');
-              } else {
-                alert('something went wrong!');
-              }
+            fetch(`/api/burgers/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({devoured: newDevouredState}),
+            }).then((response) => {
+                if (response.ok) {
+                    console.log(`changed devoured/eaten to: ${newDevouredState}`);
+                    window.location.reload();
+                } else {
+                    alert('something went wrong!');
+                }
             });
-          });
         });
-      }
-    
     });
+});

@@ -2,23 +2,25 @@
 <img src="/assets/img/burger.png" alt="Burger Picture" height="145px" width ="200px">
 
 <h2>Ready to Eat your Burger?</h2>
-
 <ul>
-{{#each burgers}}
-{{#unless devoured}}
-<li>{{this.burger_name}}
-        <button class="change-devoured" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
-    </li>
-    {{/unless}}
+    {{#each burgers}}
+        {{#unless devoured}}
+            <li>
+                {{this.burger_name}}
+                <button class="change-devoured" id="devour" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
+            </li>
+        {{/unless}}
     {{/each}}
 </ul>
 
 <h2>Burgers Devoured</h2>
-{{#each burgers}}
-    {{#if devoured}}
-    <li>{{this.burger_name}}
-    </li>
-      {{/if}}
+<ul>
+    {{#each burgers}}
+        {{#if devoured}}
+            <li>
+                {{this.burger_name}}
+            </li>
+        {{/if}}
     {{/each}}
 </ul>
 
