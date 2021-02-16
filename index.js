@@ -28,7 +28,10 @@ var connection = mysql.createConnection({
             "view all departments",
             "view all roles",
             "update employee roles",
-            "update employee managers"
+            "update employee managers",
+            "delete department",
+            "delete role",
+            "delete employee"
         ],
     },
   ];
@@ -216,12 +219,60 @@ function role () {
             case "update employee managers":
                 updateEmployeeManager();
                 break;
+            case "delete department":
+                deleteDepartment();
+                break;
+            case "delete role":
+                deleteRole();
+                break;
+            case "delete employee":
+                deleteEmployee();
+                break;
         }
     });
 
     getDepts();
     getRoles();
     getManagers();
+}
+
+function deleteDepartment() {
+    connection.query("SELECT * FROM department", function(err, departments) {
+        let deptArr = [];
+        for(let i = 0; i < departments.length; i++) {
+            deptArr.push(departments[i].department_name)
+        }
+
+        inquirer.prompt([
+            {
+                name: "departmentChoice",
+                type: "list",
+                message: "which department would you like to delete",
+                choices: deptArr
+            }
+        ]).then(function(answer) {
+            let department;
+                for(let i = 0; i < departments.length; i++) {
+                    if(departments[i].department_name == answer.departmentChoice) {
+                        department = departments[i]
+                    }
+                }
+
+                connection.query("DELETE FROM department WHERE department_id = ?", [department.department_id], function(err) {
+                    if(err) throw err;
+                    console.log("department (and roles that depend on it) deleted");
+                    runApplication();
+                })
+        })
+    })
+}
+
+function deleteRole() {
+
+}
+
+function deleteEmployee() {
+
 }
 
 function viewEmployeesByManager() {
