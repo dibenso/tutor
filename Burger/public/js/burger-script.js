@@ -1,33 +1,29 @@
 document.addEventListener("DOMContentLoaded", (event) => {
     if (event) {
         console.info("DOM loaded");
-      } 
-    const createBurgerBtn = document.getElementById("create-form");
+    }
 
-    if (createBurgerBtn) {
-        createBurgerBtn.addEventListener("submit", (e) => {
-          e.preventDefault();
-    const newBurger = {
-        name: document.getElementById('ca').value.trim(),
-          };
-    fetch(`/api/burgers/${id}`, {
-        method: "POST",
-        headers: {
-        Accept: "application/json",
-                "Content-Type": "application/json",
+    const createForm = document.getElementById("create-form");
+
+    createForm.addEventListener('submit', event => {
+        event.preventDefault();
+        const burgerName = document.getElementById('ca');
+        const newBurger = { burger_name: burgerName.value, devoured: false };
+
+        fetch('/api/burgers', {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-
-            body: JSON.stringify(newDevouredState),
-        }).then((res) => {
-
-            document.getElementById("ca").value = '';
+            body: JSON.stringify(newBurger)
+        }).then(res => {
+            burgerName.value = '';
 
             console.log("new burger was made");
-            location.reload();
-          });
+            window.location.reload();
         });
-      }
-
+    })
 
     const changeDevourBtn = document.querySelectorAll(".change-devoured"); 
     if (changeDevourBtn) {

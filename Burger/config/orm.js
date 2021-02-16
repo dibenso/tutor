@@ -47,14 +47,7 @@ const orm = {
     });
   },
   insertOne(table, cols, vals, cb) {
-    let queryString = `INSERT INTO ${table}`;
-
-    queryString += ' (';
-    queryString += cols.toString();
-    queryString += ') ';
-    queryString += 'VALUES (';
-    queryString += printQuestionMarks(vals.length);
-    queryString += ') ';
+    const queryString = `INSERT INTO ${table} (${cols.toString()}) VALUES (${printQuestionMarks(vals.length)})`;
 
     console.log("Your Burger is Ready!");
 
