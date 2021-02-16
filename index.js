@@ -24,6 +24,7 @@ var connection = mysql.createConnection({
             "add new role",
             "add new department",
             "view all employees",
+            "view employees by manager",
             "view all departments",
             "view all roles",
             "update employee roles",
@@ -194,6 +195,9 @@ function role () {
             case "view all employees":
                 viewEmployees();
                 break;
+            case "view employees by manager":
+                viewEmployeesByManager();
+                break;
             case "view employees by role":
                 viewByRole();
                 break;
@@ -220,12 +224,46 @@ function role () {
     getManagers();
 }
 
+function viewEmployeesByManager() {
+    connection.query(
+        "SELECT employee_id, concat(employee.first_name, ' ', employee.last_name) AS Name FROM employee",
+        function(err, managers) {
+            if(err) throw err;
+            empArr = [];
+            for(let i = 0; i < managers.length; i++) {
+                emplArr.push(managers[i].Name);
+            }
+            inquirer.prompt([
+                {
+                    name: "managerChoice",
+                    type: "list",
+                    message: "which manager would you like to see the employees of?",
+                    choices: emplArr
+                }
+            ]).then(function(answer) {
+                let manager;
+                for(let i = 0; i < managers.length; i++) {
+                    if(managers[i].Name == answer.managerChoice) {
+                        manager = managers[i]
+                    }
+                }
+
+                connection.query("SELECT * FROM employee WHERE manager_id = ?", [manager.employee_id], function(err, employees) {
+                    if(err) throw err;
+                    console.table(employees);
+                    runApplication();
+                })
+            })
+        }
+    )
+}
+
 function updateEmployeeManager() {
     connection.query( 
         `SELECT employee_id, concat(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee`,
         function(err, employees) {
             emplArr = [];
-            for (i = 0; i <employees.length; i++) {
+            for (let i = 0; i <employees.length; i++) {
                 emplArr.push(employees[i].Name);
             }
             inquirer.prompt([
@@ -253,14 +291,12 @@ function updateEmployeeManager() {
                     }
                 }
 
-                console.log(employee)
-                console.log(manager)
-
                 connection.query(
                     "UPDATE employee SET manager_id = ? WHERE employee_id = ?",
                     [manager.employee_id, employee.employee_id],
                     function (err) {
                         if (err) throw err;
+                        console.log('employee updated');
                     }
                 );
                 
