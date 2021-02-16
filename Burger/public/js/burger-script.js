@@ -1,5 +1,3 @@
-const e = require("express");
-
 document.addEventListener("DOMContentLoaded", (event) => {
     if (event) {
         console.info("DOM loaded");
