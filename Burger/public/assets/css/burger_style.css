@@ -1,0 +1,16 @@
+div.burgers-section {
+    display: flex;
+    width: 100%;
+}
+
+.left {
+    width: 50%;
+    justify-content: left;
+    text-align: left;
+}
+
+.right {
+    width: 50%;
+    justify-content: right;
+    text-align: right;
+}

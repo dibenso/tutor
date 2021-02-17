@@ -1,28 +1,33 @@
 <h1>BURGERS!</h1>
 <img src="/assets/img/burger.png" alt="Burger Picture" height="145px" width ="200px">
 
-<h2>Ready to Eat your Burger?</h2>
-<ul>
-    {{#each burgers}}
-        {{#unless devoured}}
-            <li>
-                {{this.burger_name}}
-                <button class="change-devoured" id="devour" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
-            </li>
-        {{/unless}}
-    {{/each}}
-</ul>
-
-<h2>Burgers Devoured</h2>
-<ul>
-    {{#each burgers}}
-        {{#if devoured}}
-            <li>
-                {{this.burger_name}}
-            </li>
-        {{/if}}
-    {{/each}}
-</ul>
+<div class="burgers-section">
+    <span class="left">
+        <h2>Ready to Eat your Burger?</h2>
+        <ul>
+            {{#each burgers}}
+                {{#unless devoured}}
+                    <li>
+                        {{this.burger_name}}
+                        <button class="change-devoured" id="devour" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
+                    </li>
+                {{/unless}}
+            {{/each}}
+        </ul>
+    </span>
+    <span class="right">
+        <h2>Burgers Devoured</h2>
+        <ul>
+            {{#each burgers}}
+                {{#if devoured}}
+                    <li>
+                        {{this.burger_name}}
+                    </li>
+                {{/if}}
+            {{/each}}
+        </ul>
+    </span>
+</div>
 
 <h2>BYOB (Build Your Own Burger):</h2>
 <form id="create-form">
