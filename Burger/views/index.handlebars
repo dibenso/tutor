@@ -1,4 +1,4 @@
-<h1>BURGERS!</h1>
+<h1 class="title">BURGERS!</h1>
 <img src="/assets/img/burger.png" alt="Burger Picture" height="145px" width ="200px">
 
 <div class="burgers-section">
@@ -9,11 +9,23 @@
                 {{#unless devoured}}
                     <li>
                         {{this.burger_name}}
-                        <button class="change-devoured" id="devour" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
+                        <button class="change-devoured devour-btn" id="devour" data-id="{{id}}" data-devoured="{{devoured}}">Devour It Now</button>
                     </li>
                 {{/unless}}
             {{/each}}
         </ul>
+    </span>
+    <span class="center">
+        <h2>BYOB (Build Your Own Burger):</h2>
+        <form id="create-form">
+
+            <div class="form-group">
+                <label for="ca">What's your burger's name?</label>
+                <input type="text" id="ca" name="name">
+            </div>
+
+            <button class="add-burger-btn" type="submit">Add Your Burger!</button>
+        </form>
     </span>
     <span class="right">
         <h2>Burgers Devoured</h2>
@@ -28,14 +40,3 @@
         </ul>
     </span>
 </div>
-
-<h2>BYOB (Build Your Own Burger):</h2>
-<form id="create-form">
-
-    <div class="form-group">
-        <label for="ca">What's your burger's name?</label>
-        <input type="text" id="ca" name="name">
-    </div>
-
-    <button type="submit">Add Your Burger!</button>
-</form>

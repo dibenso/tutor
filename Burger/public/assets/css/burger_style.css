@@ -1,16 +1,52 @@
+.title {
+    text-align: center;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 div.burgers-section {
     display: flex;
     width: 100%;
 }
 
 .left {
-    width: 50%;
+    width: 33.3%;
     justify-content: left;
     text-align: left;
 }
 
+.center {
+    width: 33.3%;
+    justify-content: center;
+    text-align: center;
+}
+
 .right {
-    width: 50%;
+    width: 33.3%;
     justify-content: right;
     text-align: right;
+}
+
+.add-burger-btn {
+    background-color: green;
+    border-color: green;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.devour-btn {
+    background-color: red;
+    border-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
 }
